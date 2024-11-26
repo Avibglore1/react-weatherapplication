@@ -72,7 +72,7 @@ async function fetchWeather(location){
     <header className='h-[150px] bg-[#2c3e50] flex 
     justify-center items-center'>
         <div className="w-[60%] flex justify-between">
-            <input type="text" name="" id=""
+            <input type="text" name="" id="" value={value}
              placeholder="Enter Location" 
              className="text-[1.1rem] outline-none text-white 
              bg-transparent py-[1rem] px-0 border-b-2 border-white
