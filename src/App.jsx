@@ -12,35 +12,39 @@ function App() {
         src:'--'
     })
     const handleClick = async() =>{
-        if(value!=''){
-            const data = await fetchWeather(value);
-            if (data==null){
-                alert('no data found for this location');
-                return
-            }else{
-                const temp = data.current.temp_c;
-                const location = data.location.name;
-                const timeData = data.location.localtime;
-                const [date,time] = timeData.split(' '); 
-                const src=data.current.condition.icon;
-                const condition = data.current.condition.text;
-
-                let newObj={
-                    temp: temp,
-                    location: location,
-                    date: date,
-                    time: time,
-                    condition: condition,
-                    src: src
+        try{
+            if(value!=''){
+                const data = await fetchWeather(value);
+                if (data==null){
+                    alert('no data found for this location');
+                    return
                 }
-               
-                setWeatherobj(newObj);
-                setValue("");
+                    const temp = data.current.temp_c;
+                    const location = data.location.name;
+                    const timeData = data.location.localtime;
+                    const [date,time] = timeData.split(' '); 
+                    const src=data.current.condition.icon;
+                    const condition = data.current.condition.text;
+    
+                    let newObj={
+                        temp: temp,
+                        location: location,
+                        date: date,
+                        time: time,
+                        condition: condition,
+                        src: src
+                    }
+                    setWeatherobj(newObj);
+                    setValue("");  
+                
+                
+            }else{
+                alert("location can't be empty");
             }
-            
-        }else{
-            alert("location can't be empty");
+        }catch(err){
+            console.log(err);
         }
+        
     }
 const handleInput = (e) =>{
     setValue(e.target.value);
@@ -48,14 +52,20 @@ const handleInput = (e) =>{
 
 async function fetchWeather(location){
     const url = `http://api.weatherapi.com/v1/current.json?key=6fc74cf82bc44773a8a171855241407&q=${location}&aqi=no`
-    const response = await fetch(url);
-    if(response.status==400){
-        alert('location is invalid');
-        return;
+    
+    try{
+        const response = await fetch(url);
+        if(response.status==400){
+            alert('location is invalid');
+            return;
+        }
+        const data= await response.json();
+        return data;
+    }catch(err){
+        console.log('Error fetching weather data', err);
+        alert('Server error')
     }
-    else{
-        return await response.json()
-    }
+
 }
   return (
     <>
